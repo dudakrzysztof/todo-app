@@ -2,6 +2,7 @@ package io.github.dudakrzysztof.todoapp.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -10,10 +11,19 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "desc")
+//    @Column(name = "desc")
     @NotBlank(message = "Task's description must not be empty")
     private String description;
     private boolean done;
+    private LocalDateTime deadline;
+    @Embedded
+//    @AttributeOverrides({
+//            @AttributeOverride(column = @Column(name = "updatedOn"), name = "updatedOn")
+//    })
+    private Audit audit = new Audit();
+    @ManyToOne
+    @JoinColumn(name = "task_group_id")
+    private TaskGroup group;
 
     public Task() {
     }
@@ -22,7 +32,7 @@ public class Task {
         return id;
     }
 
-    public void setId(final int id) {
+    void setId(final int id) {
         this.id = id;
     }
 
@@ -30,7 +40,7 @@ public class Task {
         return description;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
         this.description = description;
     }
 
@@ -41,4 +51,29 @@ public class Task {
     public void setDone(boolean done) {
         this.done = done;
     }
+
+    public LocalDateTime getDeadline() {
+        return deadline;
+    }
+
+    void setDeadline(LocalDateTime deadline) {
+        this.deadline = deadline;
+    }
+
+    TaskGroup getGroup() {
+        return group;
+    }
+
+    void setGroup(TaskGroup group) {
+        this.group = group;
+    }
+
+    public void updateFrom(final Task source){
+        description = source.description;
+        done = source.done;
+        deadline = source.deadline;
+        group = source.group;
+    }
+
+
 }
