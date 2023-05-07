@@ -1,5 +1,6 @@
 package io.github.dudakrzysztof.todoapp.logic;
 
+import io.github.dudakrzysztof.todoapp.model.Project;
 import io.github.dudakrzysztof.todoapp.model.TaskGroup;
 import io.github.dudakrzysztof.todoapp.model.TaskGroupRepository;
 import io.github.dudakrzysztof.todoapp.model.TaskRepository;
@@ -24,7 +25,11 @@ public class TaskGroupService {
     }
 
     public GroupReadModel createGroup(GroupWriteModel source){
-        TaskGroup result = repository.save(source.toGroup());
+        return createGroup(source, null);
+    }
+
+    GroupReadModel createGroup(final GroupWriteModel source, Project project) {
+        TaskGroup result = repository.save(source.toGroup(project));
         return new GroupReadModel(result);
     }
 
@@ -45,4 +50,5 @@ public class TaskGroupService {
         result.setDone(!result.isDone());
         repository.save(result);
     }
+
 }

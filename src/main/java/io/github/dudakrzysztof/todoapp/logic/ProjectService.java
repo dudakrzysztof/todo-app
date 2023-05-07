@@ -5,6 +5,7 @@ import io.github.dudakrzysztof.todoapp.model.*;
 import io.github.dudakrzysztof.todoapp.model.projection.GroupReadModel;
 import io.github.dudakrzysztof.todoapp.model.projection.GroupTaskWriteModel;
 import io.github.dudakrzysztof.todoapp.model.projection.GroupWriteModel;
+import io.github.dudakrzysztof.todoapp.model.projection.ProjectWriteModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,8 +30,8 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public Project save(final Project toSave){
-        return projectRepository.save(toSave);
+    public Project save(final ProjectWriteModel toSave){
+        return projectRepository.save(toSave.toProject());
     }
 
     public GroupReadModel createGroup(int projectId, LocalDateTime deadline){
@@ -53,7 +54,7 @@ public class ProjectService {
                                    }
                                    ).collect(Collectors.toSet())
                    );
-                     return taskGroupService.createGroup(targetGroup);
+                     return taskGroupService.createGroup(targetGroup, project);
 
                 }).orElseThrow(() -> new IllegalArgumentException("Project with given id not found"));
     }
